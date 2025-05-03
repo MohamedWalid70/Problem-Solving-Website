@@ -16,10 +16,10 @@
       <li class="justify-self-end ms-auto">
         <ul class="nav nav-underline column-gap-5 fw-semibold align-items-center">
           <li class="nav-item cursor-pointer">
-            <a class="nav-link cursor-grab">Login</a>
+            <a class="nav-link cursor-grab" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Login</a>
           </li>
           <li class="nav-item cursor-pointer">
-            <a class="btn btn-warning">Sign Up</a>
+            <a class="btn btn-warning" routerLink="/signup" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Sign Up</a>
           </li>
         </ul>
       </li>

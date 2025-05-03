@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Problem } from '../../Interfaces/Problem';
 import * as problemsFile from '../../../assets/problems.json';
-import { ProblemsService } from '../../services/problems.service';
+import { ProblemsService } from '../../services/ProblemsService/problems.service';
 import { Submission } from '../../Interfaces/Submission';
 
 

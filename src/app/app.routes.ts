@@ -12,7 +12,8 @@ export const routes: Routes = [
   },
   {
     path: 'problem-item/:id',
-    component: ProblemEditorComponent,
+    loadComponent: () => import('./Pages/problem-editor/problem-editor.component').
+    then(m => m.ProblemEditorComponent),
     title: 'Problem Editor',
     pathMatch: 'full'
   },
@@ -21,5 +22,29 @@ export const routes: Routes = [
     loadComponent: () => import('./Pages/main-page/main-page.component').
     then(m => m.MainPageComponent),
     title: 'Main Page'
+  },
+  {
+    path: 'main-page',
+    loadComponent: () => import('./Pages/main-page/main-page.component').
+    then(m => m.MainPageComponent),
+    title: 'Main Page'
+  },
+  {
+    path: 'signup',
+    loadComponent: () => import('./Pages/signup/signup.component').
+    then(m => m.SignupComponent),
+    title: 'Sign Up'
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./Pages/login/login.component').
+    then(m => m.LoginComponent),
+    title: 'Login'
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./Pages/not-found/not-found.component').
+    then(m => m.NotFoundComponent),
+    title: 'Not Found'
   }
 ];
