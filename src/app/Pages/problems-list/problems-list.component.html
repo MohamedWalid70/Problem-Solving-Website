@@ -1,0 +1,71 @@
+<div class="container-fluid p-0 min-vh-100 bg-light">
+  <div class="container-fluid py-5">
+    <div class="row mb-5 px-4">
+      <div class="col-lg-8">
+        <h1 class="display-4 fw-bold text-gradient">Problems</h1>
+        <p class="lead text-muted">Practice your coding skills with our curated collection of problems</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="d-flex flex-column gap-3">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" [(ngModel)]="SearchedProblemTitle" (input)="SearchProblems()" class="form-control border-start-0" placeholder="Search problems...">
+          </div>
+          <select class="form-select" [(ngModel)]="SearchedProblemDifficulty" (change)="GroupProblems()">
+            <option value="">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="table-responsive rounded-4 shadow-sm mx-4">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="py-3 px-4">Title</th>
+            <th class="py-3 px-4">Difficulty</th>
+            <th class="py-3 px-4">Tags</th>
+            <th class="py-3 px-4">Solved</th>
+            <th class="py-3 px-4">Attempts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let problem of problems" (click)="navigateToProblem(problem.id)" class="problem-row">
+            <td class="py-3 px-4">
+              <span class="problem-title">
+                {{ problem.title }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <span [class]="getDifficultyClass(problem.difficulty)">
+                {{ problem.difficulty }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="tags">
+                <span *ngFor="let tag of problem.tags" class="badge bg-light text-dark border me-1">{{ tag }}</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <span class="text-success">
+                <i class="bi bi-check-circle-fill me-1"></i>
+                {{ problem.solvedCount }}
+              </span>
+            </td>
+            <td class="py-3 px-4">
+              <span class="text-muted">
+                <i class="bi bi-arrow-repeat me-1"></i>
+                {{ problem.totalAttempts }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
