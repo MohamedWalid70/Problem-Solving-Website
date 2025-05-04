@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { User } from '../../Interfaces/User';
 import { SigningService } from '../../services/SigningService/signing.service';
+import { confirmPassValidator } from '../../Validators/passwordConfirmation.validator';
 
 
 @Component({
@@ -19,7 +20,6 @@ export class SignupComponent {
 
   signupForm: FormGroup;
   isLoading = false;
-  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -32,13 +32,8 @@ export class SignupComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {
-      validators: this.passwordMatchValidator
+      validators: confirmPassValidator('password', 'confirmPassword')
     });
-  }
-
-  passwordMatchValidator(g: FormGroup) {
-    return g.get('password')?.value === g.get('confirmPassword')?.value
-      ? null : { mismatch: true };
   }
 
   onSubmit() {
@@ -48,19 +43,26 @@ export class SignupComponent {
             username: this.signupForm.value.username,
             email: this.signupForm.value.email,
             password: this.signupForm.value.password,
+            confirmPassword: this.signupForm.value.confirmPassword,
             role: 'user',
-            phoneNumber: this.signupForm.value.phoneNumber
+            phoneNumber: '1234567890'
         };
 
 
-        this.signingService.signup(user).subscribe((response) => {
+        this.signingService.signup(user).subscribe({
+          next: (response) => {
             console.log(response);
+            alert(response.message);
+            setTimeout(() => {
+              this.isLoading = false;
+              this.router.navigate(['/login']);
+            }, 1500);
+          },
+          error: (response) => {
+            alert(response.error);
+          }
         });
-        // Simulate API call
-        setTimeout(() => {
-            this.isLoading = false;
-            this.router.navigate(['/login']);
-        }, 1500);
-        }
+        
+      }
   }
 } 

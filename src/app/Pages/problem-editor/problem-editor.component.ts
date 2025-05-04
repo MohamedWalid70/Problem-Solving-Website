@@ -1,11 +1,10 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Problem } from '../../Interfaces/Problem';
-import * as problemsFile from '../../../assets/problems.json';
+import { Problem, getDifficultyText } from '../../Interfaces/Problem';
 import { ProblemsService } from '../../services/ProblemsService/problems.service';
 import { Submission } from '../../Interfaces/Submission';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-problem-editor',
@@ -16,52 +15,74 @@ import { Submission } from '../../Interfaces/Submission';
 })
 export class ProblemEditorComponent implements OnInit {
   
-  @Input() id !: string;
+  id: number = 0;
   solution: string = '';
-  // private _ProblemService: ProblemsService;
-
   Problem : Problem | undefined;
+  submissionResult: any = null;
 
-  constructor() {
-    // this._ProblemService = inject(ProblemsService);
+  constructor(
+    private _ProblemsService: ProblemsService,
+    private route: ActivatedRoute
+  ) {
+    this._ProblemsService = inject(ProblemsService);
   }
 
   ngOnInit() {
-    
-    this.Problem = problemsFile.problems.find(problem => problem.id === Number(this.id));
-
-    if (this.Problem) {
-      this.solution = this.Problem.initialCode;
-    }
+    this.route.params.subscribe(params => {
+      this.id = Number(params['id']);
+      console.log('Problem ID:', this.id);
+      
+      this._ProblemsService.getProblem(this.id).subscribe(
+        {
+          next : (receivedProblem) => {
+            this.Problem = receivedProblem;
+            // if (this.Problem) {
+            //   this.solution = this.Problem.best_Solution;
+            // }
+          },
+          error : (response) => {
+            console.log(response.error);
+          }
+        });
+    });
   }
 
   submitSolution() {
-    // TODO: Implement solution submission
-    console.log('Submitting solution:', {
-      problemId: this.id,
-      solution: this.solution
-    });
-
     const submission: Submission = {
       problemId: this.id,
-      userId: 1,
+      userId: (localStorage.getItem('userId'))?.toString(),
       code: this.solution,
       languageId: 1
-    };
-    
-    // this._ProblemService.SubmitProblem(submission).subscribe();
+    };  
+
+    this._ProblemsService.SubmitProblem(submission).subscribe({
+      next : (response) => {
+        console.log(response);
+        this.submissionResult = {
+          status: response?.success === true ? 'success' : 'failure',
+          message: response.message,
+          evaluation: response?.aievaluation?.iscorrect,
+          successRate: response?.aievaluation?.successrate,
+          feedback: response?.aievaluation?.feedback,
+          correctAnswer: response?.aievaluation?.correctsolution
+        };
+      },
+      error : (response) => {
+        console.log(response.error);
+        this.submissionResult = {
+          status: 'error',
+          message: response.error || 'An error occurred while submitting your solution.'
+        };
+      }
+    });
   }
 
-  getDifficultyClass(difficulty: string): string {
-    switch(difficulty) {
-      case 'Easy':
-        return 'difficulty-easy';
-      case 'Medium':
-        return 'difficulty-medium';
-      case 'Hard':
-        return 'difficulty-hard';
-      default:
-        return '';
-    }
+  getDifficultyClass(level: number): string {
+    const difficulty = getDifficultyText(level).toLowerCase();
+    return `difficulty-${difficulty}`;
+  }
+
+  getDifficultyText(level: number): string {
+    return getDifficultyText(level);
   }
 }

@@ -22,9 +22,10 @@
           >Dashboard</a
         >
       </li>
-      <li class="justify-self-end ms-auto">
-        <ul class="nav nav-underline column-gap-5 fw-semibold align-items-center">
-          <li class="nav-item cursor-pointer">
+      @if(loginEnabled==false) {
+        <li class="justify-self-end ms-auto">
+          <ul class="nav nav-underline column-gap-5 fw-semibold align-items-center">
+            <li class="nav-item cursor-pointer">
             <a class="nav-link cursor-grab" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >Login</a>
           </li>
           <li class="nav-item cursor-pointer">
@@ -32,5 +33,18 @@
           </li>
         </ul>
       </li>
+      }
+      @else {
+        <li class="justify-self-end ms-auto">
+          <ul class="nav nav-underline column-gap-5 fw-semibold align-items-center">
+            <li class="nav-item cursor-pointer">
+            <span class="nav-link cursor-grab">Welcome, {{username}}</span>
+          </li>
+          <li class="nav-item cursor-pointer">
+            <a class="btn btn-danger" (click)="logout()" routerLink="/login">Logout</a>
+          </li>
+        </ul>
+      </li>
+      }
   </ul>
 </nav>

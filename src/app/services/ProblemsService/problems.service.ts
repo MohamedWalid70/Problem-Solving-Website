@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Problem } from '../../Interfaces/Problem';
 import { Submission } from '../../Interfaces/Submission';
@@ -14,14 +14,18 @@ export class ProblemsService {
 
   getProblems() : Observable<Array<Problem>> {
     
-    return this.http.get<Array<Problem>>(`${environment.baseUrl}/api/problems`);
+    return this.http.get<Array<Problem>>(`${environment.baseUrl}/api/Problem/getProblems`);
   }
 
-  getProblem(id: string) : Observable<Problem> {
-    return this.http.get<Problem>(`${environment.baseUrl}/api/problems/${id}`);
+  getProblem(id: number) : Observable<Problem> {
+    return this.http.get<Problem>(`${environment.baseUrl}/api/Problem/getProblem/${id}`);
   }
 
-  SubmitProblem(submission: Submission) : Observable<Problem> {
-    return this.http.post<Problem>(`${environment.baseUrl}/api/problems/submit`, submission);
+  SubmitProblem(submission: Submission) : Observable<any> {
+    return this.http.post<any>(`${environment.baseUrl}/api/Submission/submitCode`, submission,
+       {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })});
   }
 }

@@ -1,6 +1,6 @@
 export interface Submission {
-    problemId: string;
-    userId: number;
+    problemId: number;
+    userId: string | undefined;
     code: string;
     languageId: number;
 }

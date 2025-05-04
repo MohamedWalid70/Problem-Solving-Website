@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import * as problemsFile from '../../../assets/problems.json';
-import { Problem } from '../../Interfaces/Problem';
+import { Problem, getDifficultyText } from '../../Interfaces/Problem';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ProblemsService } from '../../services/ProblemsService/problems.service';
 
 @Component({
   selector: 'app-problems-list',
@@ -18,10 +18,19 @@ export class ProblemsListComponent {
   SearchedProblemTitle: string = '';
   SearchedProblemDifficulty: string = '';
 
-  problems: Problem[];
+  problems: Problem[] = [];
+  loadedProblems: Problem[] = [];
 
-  constructor(private router: Router) {
-    this.problems =  problemsFile.problems;
+  constructor(private router: Router, private _ProblemsService: ProblemsService) {
+    this._ProblemsService.getProblems().subscribe({ 
+      next: (receivedProblems) => {
+        this.loadedProblems = receivedProblems;
+        this.problems = this.loadedProblems;
+      },
+      error: (response) => {
+        console.log(response.error);
+      }
+    });
   }
 
   ngOnInit() {
@@ -29,39 +38,36 @@ export class ProblemsListComponent {
   }
 
   navigateToProblem(id: number) {
-    // Store the problem in a service or state management
-    // For now, we'll pass it as a query parameter
     this.router.navigate(['/problem-item', id]);
   }
 
-  getDifficultyClass(difficulty: string): string {
-    switch(difficulty) {
-      case 'Easy':
-        return 'difficulty-easy';
-      case 'Medium':
-        return 'difficulty-medium';
-      case 'Hard':
-        return 'difficulty-hard';
-      default:
-        return '';
-    }
+  getDifficultyClass(level: number): string {
+    const difficulty = this.getDifficultyText(level).toLowerCase();
+    return `difficulty-${difficulty}`;
   }
 
+  getDifficultyText(level: number): string {
+    return getDifficultyText(level);
+  }
 
   SearchProblems() {
     if (this.SearchedProblemTitle) {
-      this.problems = this.problems.filter(problem => problem.title.toLowerCase().includes(this.SearchedProblemTitle.toLowerCase()));
+      this.problems = this.loadedProblems.filter(problem => 
+        problem.title.toLowerCase().includes(this.SearchedProblemTitle.toLowerCase())
+      );
     } else {
-      this.problems = problemsFile.problems;
+      this.problems = this.loadedProblems;
     }
   }
 
   GroupProblems() {
-    this.problems = problemsFile.problems;
+    this.problems = this.loadedProblems;
     if (this.SearchedProblemDifficulty) {
-      this.problems = this.problems.filter(problem => problem.difficulty === this.SearchedProblemDifficulty);
+      this.problems = this.problems.filter(problem => 
+        this.getDifficultyText(problem.difficultyLevel) === this.SearchedProblemDifficulty
+      );
     } else {
-      this.problems = problemsFile.problems;
+      this.problems = this.loadedProblems;
     }
   }
 

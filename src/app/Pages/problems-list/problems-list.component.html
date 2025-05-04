@@ -29,9 +29,7 @@
           <tr>
             <th class="py-3 px-4">Title</th>
             <th class="py-3 px-4">Difficulty</th>
-            <th class="py-3 px-4">Tags</th>
-            <th class="py-3 px-4">Solved</th>
-            <th class="py-3 px-4">Attempts</th>
+            <th class="py-3 px-4">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -42,26 +40,14 @@
               </span>
             </td>
             <td class="py-3 px-4">
-              <span [class]="getDifficultyClass(problem.difficulty)">
-                {{ problem.difficulty }}
+              <span [class]="getDifficultyClass(problem.difficultyLevel)">
+                {{ getDifficultyText(problem.difficultyLevel) }}
               </span>
             </td>
             <td class="py-3 px-4">
-              <div class="tags">
-                <span *ngFor="let tag of problem.tags" class="badge bg-light text-dark border me-1">{{ tag }}</span>
-              </div>
-            </td>
-            <td class="py-3 px-4">
-              <span class="text-success">
-                <i class="bi bi-check-circle-fill me-1"></i>
-                {{ problem.solvedCount }}
-              </span>
-            </td>
-            <td class="py-3 px-4">
-              <span class="text-muted">
-                <i class="bi bi-arrow-repeat me-1"></i>
-                {{ problem.totalAttempts }}
-              </span>
+              <button class="btn btn-primary btn-sm">
+                Solve
+              </button>
             </td>
           </tr>
         </tbody>

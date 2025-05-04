@@ -1,8 +1,8 @@
 export interface ProblemAPI {
   id?: number;
   title: string;
-  description: string;
   constraints: string;
+  description: string;
   difficultyLevel: number;
   testCaseInput: string;
   testCaseOutput: string;

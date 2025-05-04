@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { LoginUser } from '../../Interfaces/LoginUser';
 import { SigningService } from '../../services/SigningService/signing.service';
-
+import { LoginResponse } from '../../Interfaces/LoginResponse';
+import { LoginEnableService } from '../../services/LoginEnable/login-enable.service';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +18,13 @@ import { SigningService } from '../../services/SigningService/signing.service';
 export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
-  errorMessage = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private signingService : SigningService
+    private signingService : SigningService,
+    private loginEnableService : LoginEnableService
   ) 
   {
     this.loginForm = this.fb.group({
@@ -32,10 +34,19 @@ export class LoginComponent {
     });
   }
 
+  ngOnInit() {
+    if (localStorage.getItem('token')) {
+      this.router.navigate(['/main-page']);
+    }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      // TODO: Implement actual login logic here
 
       const loginUser: LoginUser = {
         email: this.loginForm.value.email,
@@ -43,16 +54,23 @@ export class LoginComponent {
         rememberMe: this.loginForm.value.rememberMe
       };
 
-      this.signingService.login(loginUser).subscribe((response) => {
-        console.log(response);
+      this.signingService.login(loginUser).subscribe({
+        next: (response) => {
+          alert(`Welcome ${response?.user?.username}`);
+          localStorage.setItem('token', response?.token);
+          localStorage.setItem('username', response?.user?.username);
+          localStorage.setItem('userId', response?.user?.id);
+          this.loginEnableService.setLoginEnabled(true);
+          setTimeout(() => {
+            this.isLoading = false;
+            this.router.navigate(['/main-page']);
+          }, 1000);
+        },
+        error: (response) => {
+          alert(response.error);
+          this.isLoading = false;
+        }
       });
-      console.log('Login form submitted:', this.loginForm.value);
-      
-      // Simulate API call
-    //   setTimeout(() => {
-    //     this.isLoading = false;
-    //     this.router.navigate(['/main-page']);
-    //   }, 1500);
-     }
+    }
   }
 } 

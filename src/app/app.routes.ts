@@ -20,9 +20,9 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () => import('./Pages/main-page/main-page.component').
-    then(m => m.MainPageComponent),
-    title: 'Main Page'
+    loadComponent: () => import('./Pages/login/login.component').
+    then(m => m.LoginComponent),
+    title: 'Login'
   },
   {
     path: 'main-page',
@@ -42,7 +42,11 @@ export const routes: Routes = [
     then(m => m.LoginComponent),
     title: 'Login'
   },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', 
+    loadComponent: () => import('./Pages/dashboard/dashboard.component').
+    then(m => m.DashboardComponent),
+    title: 'Dashboard'
+  },
   {
     path: '**',
     loadComponent: () => import('./Pages/not-found/not-found.component').

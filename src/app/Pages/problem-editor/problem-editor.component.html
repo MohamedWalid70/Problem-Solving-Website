@@ -6,24 +6,9 @@
           <div class="card-body p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
               <h1 class="card-title display-5 fw-bold text-gradient mb-0">{{ Problem.title }}</h1>
-              <span [class]="getDifficultyClass(Problem.difficulty)" class="badge">
-                {{ Problem.difficulty }}
+              <span [class]="getDifficultyClass(Problem.difficultyLevel)" class="badge">
+                {{ getDifficultyText(Problem.difficultyLevel) }}
               </span>
-            </div>
-            
-            <div class="d-flex gap-4 mb-4">
-              <div class="d-flex align-items-center text-success">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <span class="fw-medium">{{ Problem.solvedCount }} solved</span>
-              </div>
-              <div class="d-flex align-items-center text-muted">
-                <i class="bi bi-arrow-repeat me-2"></i>
-                <span class="fw-medium">{{ Problem.totalAttempts }} attempts</span>
-              </div>
-            </div>
-
-            <div class="tags mb-4">
-              <span *ngFor="let tag of Problem.tags" class="badge bg-light text-dark border me-2">{{ tag }}</span>
             </div>
 
             <div class="mb-4">
@@ -32,33 +17,67 @@
             </div>
 
             <div class="mb-4">
-              <h2 class="h4 fw-bold mb-3">Examples</h2>
-              <div *ngFor="let example of Problem.examples" class="card bg-light border-0 mb-3">
+              <h2 class="h4 fw-bold mb-3">Constraints</h2>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-transparent border-0 ps-0">
+                  {{ Problem.constraints }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-4">
+              <h2 class="h4 fw-bold mb-3">Test Cases</h2>
+              <div class="card bg-light border-0 mb-3">
                 <div class="card-body p-3">
                   <div class="mb-3">
                     <strong class="d-block mb-2">Input:</strong>
-                    <pre class="bg-white p-3 rounded-3 border">{{ example.input }}</pre>
+                    <pre class="bg-white p-3 rounded-3 border">{{ Problem.testCaseInput }}</pre>
                   </div>
                   <div class="mb-3">
                     <strong class="d-block mb-2">Output:</strong>
-                    <pre class="bg-white p-3 rounded-3 border">{{ example.output }}</pre>
-                  </div>
-                  <div *ngIf="example.explanation">
-                    <strong class="d-block mb-2">Explanation:</strong>
-                    <p class="mb-0 text-muted">{{ example.explanation }}</p>
+                    <pre class="bg-white p-3 rounded-3 border">{{ Problem.testCaseOutput }}</pre>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div>
-              <h2 class="h4 fw-bold mb-3">Constraints</h2>
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let constraint of Problem.constraints" class="list-group-item bg-transparent border-0 ps-0">
-                  <i class="bi bi-dot text-primary me-2"></i>
-                  {{ constraint }}
-                </li>
-              </ul>
+            <!-- Submission Result -->
+            <div *ngIf="submissionResult" class="mt-4">
+              <div [class]="'alert alert-' + (submissionResult.status === 'success' ? 'success' : 'danger') + ' d-flex align-items-center'">
+                <i [class]="'bi bi-' + (submissionResult.status === 'success' ? 'check-circle-fill' : 'exclamation-circle-fill') + ' me-2'"></i>
+                <div>{{ submissionResult.message }}</div>
+              </div>
+
+              <!-- AI Evaluation Results -->
+              <div *ngIf="submissionResult.evaluation !== undefined" class="mt-3">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-body p-3">
+                    <h3 class="h5 fw-bold mb-3">AI Evaluation</h3>
+                    
+                    <!-- Evaluation Status -->
+                    <div class="d-flex align-items-center mb-3">
+                      <span [class]="'badge ' + (submissionResult.evaluation ? 'bg-success' : 'bg-danger')">
+                        {{ submissionResult.evaluation ? 'Correct' : 'Incorrect' }}
+                      </span>
+                      <span class="ms-2 text-muted">
+                        Success Rate: {{ submissionResult.successRate }}%
+                      </span>
+                    </div>
+
+                    <!-- Feedback -->
+                    <div *ngIf="submissionResult.feedback" class="mb-3">
+                      <h4 class="h6 fw-bold mb-2">Feedback</h4>
+                      <p class="text-muted mb-0">{{ submissionResult.feedback }}</p>
+                    </div>
+
+                    <!-- Correct Solution -->
+                    <div *ngIf="!submissionResult.evaluation && submissionResult.correctAnswer" class="mt-3">
+                      <h4 class="h6 fw-bold mb-2">Correct Solution</h4>
+                      <pre class="bg-light p-3 rounded-3 border font-monospace">{{ submissionResult.correctAnswer }}</pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -69,7 +88,7 @@
           <div class="card-body p-4">
             <h2 class="h4 fw-bold mb-3">Solution</h2>
             <div class="position-relative">
-              <textarea [(ngModel)]="solution" class="form-control font-monospace rounded-3" rows="37"></textarea>
+              <textarea [(ngModel)]="solution" class="form-control font-monospace rounded-3" rows="25"></textarea>
               <div class="position-absolute top-0 end-0 p-2">
                 <span class="badge bg-light text-dark border">
                   <i class="bi bi-code-slash me-1"></i>
