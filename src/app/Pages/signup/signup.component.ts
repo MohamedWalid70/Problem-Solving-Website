@@ -50,6 +50,7 @@ export class SignupComponent {
 
 
         this.signingService.signup(user).subscribe({
+
           next: (response) => {
             console.log(response);
             alert(response.message);
@@ -59,7 +60,10 @@ export class SignupComponent {
             }, 1500);
           },
           error: (response) => {
-            alert(response.error);
+            console.log(response);
+            for (let i = 0; i < response.error.errors.length; i++) {
+              alert(response.error.errors[i]?.password[0]);
+            }
           }
         });
         

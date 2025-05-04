@@ -61,11 +61,12 @@ export class ProblemEditorComponent implements OnInit {
         this.submissionResult = {
           status: response?.success === true ? 'success' : 'failure',
           message: response.message,
-          evaluation: response?.aievaluation?.iscorrect,
+          evaluation: response?.aievaluation?.iscorrect ? 'incorrect' : 'correct',
           successRate: response?.aievaluation?.successrate,
           feedback: response?.aievaluation?.feedback,
           correctAnswer: response?.aievaluation?.correctsolution
         };
+        console.log(this.submissionResult);
       },
       error : (response) => {
         console.log(response.error);
