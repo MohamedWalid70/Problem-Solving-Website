@@ -5,7 +5,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, ChatbotComponent],
+  imports: [RouterOutlet, ChatbotComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Problem, getDifficultyText } from '../../Interfaces/Problem';
 import { ProblemsService } from '../../services/ProblemsService/problems.service';
 import { Submission } from '../../Interfaces/Submission';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Language } from '../../Interfaces/Language';
+import { LanguagesService } from '../../services/languages.service';
+
 
 @Component({
   selector: 'app-problem-editor',
@@ -19,12 +22,17 @@ export class ProblemEditorComponent implements OnInit {
   solution: string = '';
   Problem : Problem | undefined;
   submissionResult: any = null;
+  selectedLanguage: number = 1; // Default to JavaScript
+  languages: Language[];
 
   constructor(
     private _ProblemsService: ProblemsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute, 
+    private _router: Router,
+    private _LanguagesService: LanguagesService
   ) {
     this._ProblemsService = inject(ProblemsService);
+    this.languages = [];
   }
 
   ngOnInit() {
@@ -44,6 +52,17 @@ export class ProblemEditorComponent implements OnInit {
             console.log(response.error);
           }
         });
+        this._LanguagesService.getLanguages().subscribe(
+          {
+            next : (receivedLanguages) => {
+              this.languages = receivedLanguages;
+            }
+            ,
+            error : (response) => {
+              console.log(response.error);
+            }
+          }
+        );
     });
   }
 
@@ -52,28 +71,39 @@ export class ProblemEditorComponent implements OnInit {
       problemId: this.id,
       userId: (localStorage.getItem('userId'))?.toString(),
       code: this.solution,
-      languageId: 1
+      languageId: this.selectedLanguage
     };  
 
     this._ProblemsService.SubmitProblem(submission).subscribe({
       next : (response) => {
         console.log(response);
         this.submissionResult = {
-          status: response?.success === true ? 'success' : 'failure',
+          status: response?.success === true ? 'Success' : 'Failure',
           message: response.message,
-          evaluation: response?.aievaluation?.iscorrect ? 'incorrect' : 'correct',
-          successRate: response?.aievaluation?.successrate,
-          feedback: response?.aievaluation?.feedback,
-          correctAnswer: response?.aievaluation?.correctsolution
+          evaluation: response?.aiEvaluation?.iscorrect ? 'Incorrect' : 'Correct',
+          successRate: response?.aiEvaluation?.successRate*10,
+          feedback: response?.aiEvaluation?.feedback,
+          correctAnswer: response?.aiEvaluation?.correctSolution
         };
         console.log(this.submissionResult);
       },
       error : (response) => {
-        console.log(response.error);
-        this.submissionResult = {
-          status: 'error',
-          message: response.error || 'An error occurred while submitting your solution.'
-        };
+        console.log(response);
+        if(response.status === 0 ){
+          this.submissionResult = {
+            status: 'Submission error',
+            message: 'In order to submit a solution, you need to be logged in.'
+          };
+          setTimeout(() => {
+          this._router.navigate(['/login']);
+          }, 2000);
+        }
+        else{
+          this.submissionResult = {
+            status: 'error',
+            message: 'An error occurred while submitting your solution.' 
+          };
+        }
       }
     });
   }

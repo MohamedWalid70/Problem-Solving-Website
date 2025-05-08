@@ -1,0 +1,80 @@
+.table th {
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  font-size: 0.9375rem;
+  vertical-align: middle;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+}
+
+.progress {
+  width: 100px;
+  background-color: #e9ecef;
+  border-radius: 1rem;
+}
+
+.progress-bar {
+  border-radius: 1rem;
+  transition: width 0.6s ease;
+}
+
+.btn-outline-primary {
+  border-width: 1px;
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Hover effect for table rows */
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Link styles */
+a {
+  color: #0d6efd;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #0a58ca;
+}
+
+/* Empty state icon */
+.bi-inbox {
+  color: #dee2e6;
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Tooltip customization */
+[data-bs-toggle="tooltip"] {
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table th,
+  .table td {
+    font-size: 0.875rem;
+  }
+
+  .progress {
+    width: 80px;
+  }
+} 

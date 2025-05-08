@@ -6,7 +6,7 @@ import { NgIf } from '@angular/common';
 import { User } from '../../Interfaces/User';
 import { SigningService } from '../../services/SigningService/signing.service';
 import { confirmPassValidator } from '../../Validators/passwordConfirmation.validator';
-
+// import { NavbarComponent } from '../../Components/navbar/navbar.component';
 
 @Component({
   selector: 'app-signup',
@@ -29,7 +29,7 @@ export class SignupComponent {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$")]],
       confirmPassword: ['', Validators.required]
     }, {
       validators: confirmPassValidator('password', 'confirmPassword')
@@ -61,10 +61,9 @@ export class SignupComponent {
           },
           error: (response) => {
             console.log(response);
-            for (let i = 0; i < response.error.errors.length; i++) {
-              alert(response.error.errors[i]?.password[0]);
-            }
+            alert("Please, follow the known rules to create an account");
           }
+          
         });
         
       }

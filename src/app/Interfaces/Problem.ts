@@ -26,8 +26,7 @@ export interface Problem {
     }
   }
   
-  // تحويل النص إلى مستوى صعوبة رقمي
-  export function getDifficultyLevel(text: string): number {
+export function getDifficultyLevel(text: string): number {
     switch (text.toLowerCase()) {
       case 'easy':
         return 1;

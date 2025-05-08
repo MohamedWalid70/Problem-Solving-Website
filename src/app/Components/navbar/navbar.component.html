@@ -7,7 +7,16 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/problems" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Prepare</a>
       </li>
+      @if(loginEnabled && !isAdminLoggedIn) {
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/history" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">History</a>
+        </li>
+      }
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">About Us</a>
+      </li>
 
+      @if(isAdminLoggedIn) {
       <li class="nav-item">
         <a
           class="nav-link"
@@ -17,6 +26,7 @@
           >Dashboard</a
         >
       </li>
+      }
       @if(loginEnabled==false) {
         <li class="justify-self-end ms-auto">
           <ul class="nav nav-underline column-gap-5 fw-semibold align-items-center">
@@ -36,7 +46,7 @@
             <span class="nav-link cursor-grab">Welcome, {{username}}</span>
           </li>
           <li class="nav-item cursor-pointer">
-            <a class="btn btn-danger" (click)="logout()" routerLink="/login">Logout</a>
+            <a class="btn btn-danger" (click)="logout()">Logout</a>
           </li>
         </ul>
       </li>

@@ -7,6 +7,8 @@ import { LoginUser } from '../../Interfaces/LoginUser';
 import { SigningService } from '../../services/SigningService/signing.service';
 import { LoginResponse } from '../../Interfaces/LoginResponse';
 import { LoginEnableService } from '../../services/LoginEnable/login-enable.service';
+// import { NavbarComponent } from '../../Components/navbar/navbar.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,8 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   showPassword = false;
+  subscription: Subscription = new Subscription();
+
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +36,7 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
+
   }
 
   ngOnInit() {
@@ -53,24 +58,36 @@ export class LoginComponent {
         password: this.loginForm.value.password,
         rememberMe: this.loginForm.value.rememberMe
       };
+      
+      if(this.subscription) {
+        this.subscription.unsubscribe();
+      }
 
-      this.signingService.login(loginUser).subscribe({
-        next: (response) => {
-          alert(`Welcome ${response?.user?.username}`);
-          localStorage.setItem('token', response?.token);
-          localStorage.setItem('username', response?.user?.username);
-          localStorage.setItem('userId', response?.user?.id);
-          this.loginEnableService.setLoginEnabled(true);
-          setTimeout(() => {
+      if(loginUser.email.toLowerCase() != 'admin@solvesmart.com') {
+
+        this.subscription = this.signingService.login(loginUser).subscribe({
+          next: (response) => {
+            alert(`Welcome ${response?.user?.username}`);
+            localStorage.setItem('token', response?.token);
+            localStorage.setItem('username', response?.user?.username);
+            localStorage.setItem('userId', response?.user?.id);
+            this.loginEnableService.setLoginEnabled(true);
+            setTimeout(() => {
+              this.isLoading = false;
+              this.router.navigate(['/main-page']);
+            }, 1000);
+          },
+          error: (response) => {
+            alert("Invalid Username or password");
             this.isLoading = false;
-            this.router.navigate(['/main-page']);
-          }, 1000);
-        },
-        error: (response) => {
-          alert(response.error);
-          this.isLoading = false;
-        }
-      });
+          }
+        });
+     }
+     else{
+        alert("Invalid Username or password");
+        this.isLoading = false;
+     }
+
     }
   }
 } 

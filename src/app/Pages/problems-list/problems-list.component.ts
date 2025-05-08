@@ -5,7 +5,7 @@ import { Problem, getDifficultyText } from '../../Interfaces/Problem';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProblemsService } from '../../services/ProblemsService/problems.service';
-
+// import { NavbarComponent } from '../../Components/navbar/navbar.component';
 @Component({
   selector: 'app-problems-list',
   standalone: true,

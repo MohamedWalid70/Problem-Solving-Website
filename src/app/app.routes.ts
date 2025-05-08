@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { ProblemEditorComponent } from './Pages/problem-editor/problem-editor.component';
-import { DashboardComponent } from './Pages/dashboard/dashboard.component';
+import { dashboardAuthGuard } from './guards/DashboardGuard/dashboard-auth.guard';
+import { historyAuthGuard } from './guards/HistoryGuard/history-auth.guard';
+
 
 export const routes: Routes = [
   {
@@ -45,14 +47,34 @@ export const routes: Routes = [
   { path: 'dashboard', 
     loadComponent: () => import('./Pages/dashboard/dashboard.component').
     then(m => m.DashboardComponent),
-    title: 'Dashboard'
+    title: 'Dashboard',
+    canActivate: [dashboardAuthGuard]
+  },
+  {
+    path: 'admin-login',
+    loadComponent: () => import('./Pages/admin-login/admin-login.component').then(m => m.AdminLoginComponent),
+    title: 'Admin Login',
+    pathMatch: 'full',
+  },
+  {
+    path: 'about',
+    loadComponent: () => import('./Pages/about/about.component').
+    then(m => m.AboutComponent),
+    title: 'About Us'
+  },
+  {
+    path: 'history',
+    loadComponent: () => import('./Pages/submissions/submissions.component').
+    then(m => m.SubmissionsComponent),
+    title: 'History',
+    canActivate: [historyAuthGuard]
   },
   {
     path: '**',
     loadComponent: () => import('./Pages/not-found/not-found.component').
     then(m => m.NotFoundComponent),
     title: 'Not Found'
-  }
+  },
 ];
 
 

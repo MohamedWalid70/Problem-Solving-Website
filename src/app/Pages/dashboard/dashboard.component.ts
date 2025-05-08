@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LanguagesService, Language } from '../../services/languages.service';
+import { LanguagesService } from '../../services/languages.service';
+import { Language } from '../../Interfaces/Language';
 import { ProblemsApiService } from '../../services/problems-api.service';
+// import { NavbarComponent } from '../../Components/navbar/navbar.component';
+
+
 import {
   ProblemAPI,
   getDifficultyText,

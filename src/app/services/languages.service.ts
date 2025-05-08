@@ -1,42 +1,57 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Language } from '../Interfaces/Language';
 
-export interface Language {
-  languagesId: number;
-  name: string;
-  submissionId: number;
-  submission: any;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class LanguagesService {
-  private baseUrl = 'https://localhost:7212/api/Languages';
 
   constructor(private http: HttpClient) {}
 
   getLanguages(): Observable<Language[]> {
-    return this.http.get<Language[]>(`${this.baseUrl}/getLanguages`);
+    return this.http.get<Language[]>(`${environment.baseUrl}/api/Languages/getLanguages`, 
+      {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })});
   }
 
   getLanguage(id: number): Observable<Language> {
-    return this.http.get<Language>(`${this.baseUrl}/getLanguage/${id}`);
+    return this.http.get<Language>(`${environment.baseUrl}/api/Languages/getLanguage/${id}`,
+      {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })});
   }
 
   addLanguage(language: { name: string }): Observable<Language> {
-    return this.http.post<Language>(`${this.baseUrl}/addLanguage`, language);
+    return this.http.post<Language>(`${environment.baseUrl}/api/Languages/addLanguage`, language, {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })});
   }
 
   updateLanguage(id: number, language: { name: string }): Observable<Language> {
     return this.http.put<Language>(
-      `${this.baseUrl}/updateLanguage/${id}`,
-      language
+      `${environment.baseUrl}/api/Languages/updateLanguage/${id}`, 
+      language,
+      {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })}
     );
   }
 
   deleteLanguage(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/deleteLanguage/${id}`);
+    return this.http.delete(`${environment.baseUrl}/api/Languages/deleteLanguage/${id}`,
+      {headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    })}
+    );
   }
 }
