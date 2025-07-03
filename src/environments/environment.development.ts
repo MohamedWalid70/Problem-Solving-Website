@@ -1,3 +1,3 @@
 export const environment = {
-    baseUrl: 'https://localhost:7212'
+    baseUrl: 'http://problemelite.runasp.net'
 };
