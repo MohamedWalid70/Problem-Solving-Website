@@ -95,7 +95,7 @@ export class ProblemEditorComponent implements OnInit {
 
         this.SpaceComplexity = response?.aiEvaluation?.feedback?.substring(
           response?.aiEvaluation?.feedback.indexOf('Space'),
-          response?.aiEvaluation?.feedback.indexOf('Space') + 21
+          response?.aiEvaluation?.feedback.indexOf('Space') + 22
         );
 
         console.log(this.submissionResult);
