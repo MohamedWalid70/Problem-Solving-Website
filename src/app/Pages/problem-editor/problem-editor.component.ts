@@ -94,21 +94,10 @@ export class ProblemEditorComponent implements OnInit {
           );
 
         this.SpaceComplexity = response?.aiEvaluation?.feedback?.substring(
-          response?.aiEvaluation?.feedback.indexOf('Space')
+          response?.aiEvaluation?.feedback.indexOf('Space'),
+          response?.aiEvaluation?.feedback.indexOf('Space') + 21
         );
 
-        console.log(response?.aiEvaluation?.feedback.indexOf('Time'));
-        console.log(response?.aiEvaluation?.feedback.indexOf('Space'));
-
-        console.log(response?.aiEvaluation?.feedback.substring(
-          response?.aiEvaluation?.feedback.indexOf('Time'),
-          response?.aiEvaluation?.feedback.indexOf('Space')
-        ));
-        console.log(response?.aiEvaluation?.feedback.substring(
-          response?.aiEvaluation?.feedback.indexOf('Space')
-        )); 
-
-        console.log(this.TimeComplexity, this.SpaceComplexity);
         console.log(this.submissionResult);
       },
       error : (response) => {
