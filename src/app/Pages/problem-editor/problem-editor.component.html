@@ -70,13 +70,13 @@
                       <p class="text-muted mb-0">{{ submissionResult?.feedback }}</p>
                     </div>
 
-                    <div *ngIf="submissionResult?.feedback && submissionResult.success" class="mb-3">
+                    <!-- <div *ngIf="submissionResult?.feedback && submissionResult.success" class="mb-3">
                       <h4 class="h6 fw-bold mb-2">Feedback</h4>
                       <p class="text-muted mb-0">
                         {{TimeComplexity}}
                         {{SpaceComplexity}}
                       </p>
-                    </div>
+                    </div> -->
 
                     <!-- Correct Solution -->
                     @if(submissionResult?.evaluation!='' && submissionResult?.correctAnswer!=''){
