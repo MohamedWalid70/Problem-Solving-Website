@@ -24,6 +24,8 @@ export class ProblemEditorComponent implements OnInit {
   submissionResult: any = null;
   selectedLanguage: number = 1; // Default to JavaScript
   languages: Language[];
+  TimeComplexity !: string;
+  SpaceComplexity !: string;
 
   constructor(
     private _ProblemsService: ProblemsService,
@@ -85,6 +87,14 @@ export class ProblemEditorComponent implements OnInit {
           feedback: response?.aiEvaluation?.feedback,
           correctAnswer: response?.aiEvaluation?.correctSolution
         };
+
+        this.TimeComplexity = response?.aiEvaluation?.feedback.substring(
+            response?.aiEvaluation?.feedback.indexOf('Time'),
+            response?.aiEvaluation?.feedback.indexOf('Space')
+          ),
+        this.SpaceComplexity = response?.aiEvaluation?.feedback.substring(
+          response?.aiEvaluation?.feedback.indexOf('Space')
+        ),
         console.log(this.submissionResult);
       },
       error : (response) => {
