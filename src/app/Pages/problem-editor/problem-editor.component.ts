@@ -88,15 +88,17 @@ export class ProblemEditorComponent implements OnInit {
           correctAnswer: response?.aiEvaluation?.correctSolution
         };
 
-        this.TimeComplexity = response?.aiEvaluation?.feedback.substring(
+        this.TimeComplexity = response?.aiEvaluation?.feedback?.substring(
             response?.aiEvaluation?.feedback.indexOf('Time'),
             response?.aiEvaluation?.feedback.indexOf('Space')
           );
-        this.SpaceComplexity = response?.aiEvaluation?.feedback.substring(
+
+        this.SpaceComplexity = response?.aiEvaluation?.feedback?.substring(
           response?.aiEvaluation?.feedback.indexOf('Space')
         );
-console.log(this.TimeComplexity);
-console.log(this.SpaceComplexity);
+
+        console.log(this.TimeComplexity);
+        console.log(this.SpaceComplexity);
         console.log(this.submissionResult);
       },
       error : (response) => {
